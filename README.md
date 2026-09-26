@@ -39,7 +39,7 @@ pnpm run build
 pnpm run preview
 ```
 
-`build` creates `dist/`. To check the repository-subpath build locally, set `GITHUB_REPOSITORY=owner/repository` in your shell and run `pnpm run build:pages`.
+`build` creates `dist/`. Run `pnpm run build:pages` to check the GitHub Pages build locally.
 
 ## Project layout
 
@@ -58,7 +58,16 @@ pnpm run preview
 
 The workflow deploys on pushes to `main`. In the repository, open **Settings → Pages** and choose **GitHub Actions** as the build and deployment source. Push to `main`, then inspect the **Actions** tab for the deployment result. A project repository is served at `https://OWNER.github.io/REPOSITORY/`.
 
-`vite.config.ts` derives the production base path from GitHub's `GITHUB_REPOSITORY` environment variable, so the repository name does not need to be hard-coded. Hash routes keep direct lesson links working from a project subpath. The workflow checks types, lint, and tests before building and deploying `dist/`.
+`vite.config.ts` uses relative asset paths so the same build works at the repository subpath or at a custom domain root. Hash routes keep direct lesson links working at either address. The workflow checks types, lint, and tests before building and deploying `dist/`.
+
+### Moving to a custom domain
+
+1. Register and activate the domain with its provider. For a `.pp.ua` domain, activation is required after registration.
+2. In the provider's DNS settings, point the domain root (`@`) to GitHub Pages with `A` records for `185.199.108.153`, `185.199.109.153`, `185.199.110.153`, and `185.199.111.153`. If the provider supports `ALIAS` or `ANAME`, point that record to `tiennguyenminh212012-lang.github.io` instead. A registered `.pp.ua` name is the root of its own DNS zone, so a plain `CNAME` at `@` is not suitable.
+3. In this repository's **Settings → Pages**, add the hostname under **Custom domain**. The GitHub Actions deployment source does not need a `CNAME` file in the build artifact. [GitHub's DNS guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site) has the current record values.
+4. Wait for GitHub Pages to verify the DNS record and issue its HTTPS certificate, then enable **Enforce HTTPS**. Open the new address and check the lessons and 3D models before sharing it.
+
+Keep the original GitHub Pages URL available until the new address has been tested.
 
 ## Graphics and accessibility
 
