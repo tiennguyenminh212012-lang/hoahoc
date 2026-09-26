@@ -2,6 +2,8 @@
 
 An interactive Grade 9 chemistry exhibition built around inspectable 3D models and short guided lessons. It runs entirely in the browser, needs no account, and stores learning progress and display preferences on the current device.
 
+**[Open the live chemistry site](https://tiennguyenminh212012-lang.github.io/hoahoc/)**
+
 ## Explore
 
 - **Study:** Atom Explorer, a searchable 118-element periodic table, ionic and covalent bonding, a supported-compound builder, polyatomic-ion study and recall, and reaction families with interactive equation balancing.
@@ -12,10 +14,6 @@ An interactive Grade 9 chemistry exhibition built around inspectable 3D models a
 - **Remember:** Recent elements, lesson steps, ion practice, motion, and graphics preferences persist in `localStorage`.
 
 The 3D objects are educational diagrams. Particle sizes, distances, electron-density markers, and reaction timing are not to scale.
-
-## Screenshots
-
-Screenshots have not been committed. Run the site to explore the live scenes.
 
 ## Tech stack
 
