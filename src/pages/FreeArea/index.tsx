@@ -1,4 +1,4 @@
-import { useMemo, useState, type CSSProperties, type DragEvent } from 'react';
+import { useMemo, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Atom, Check, CircleHelp, RotateCcw, Sparkles, Trash2 } from 'lucide-react';
 import { getElement } from '../../chemistry-data/elements';
@@ -13,17 +13,13 @@ import './free-area.css';
 
 type Particle = 'proton' | 'neutron' | 'electron';
 type BuildMode = 'compound' | 'reactant';
+type DragSource = { kind: 'particle'; particle: Particle } | { kind: 'atom'; symbol: string };
 const emptyShells: ShellCounts = [0, 0, 0, 0];
 const presets = [1, 6, 8, 11, 17];
 
-function particleFromDrop(event: DragEvent): Particle | null {
-  const value = event.dataTransfer.getData('text/plain');
-  return value === 'particle:proton' ? 'proton' : value === 'particle:neutron' ? 'neutron' : value === 'particle:electron' ? 'electron' : null;
-}
-
-function ParticleCard({ particle, title, caption, onAdd }: { particle: Particle; title: string; caption: string; onAdd: () => void }) {
+function ParticleCard({ particle, title, caption, onAdd, onPointerStart, shouldIgnoreClick }: { particle: Particle; title: string; caption: string; onAdd: () => void; onPointerStart: (event: ReactPointerEvent<HTMLButtonElement>, source: DragSource) => void; shouldIgnoreClick: () => boolean }) {
   return <div className={`free-particle-card free-particle-${particle}`}>
-    <button className="free-particle-drag" type="button" draggable onDragStart={(event) => event.dataTransfer.setData('text/plain', `particle:${particle}`)} onClick={onAdd} aria-label={particle === 'electron' ? 'Drag or select electron' : `Drag or add ${particle}`}>
+    <button className="free-particle-drag" type="button" onPointerDown={(event) => onPointerStart(event, { kind: 'particle', particle })} onClick={() => { if (!shouldIgnoreClick()) onAdd(); }} aria-label={particle === 'electron' ? 'Drag or select electron' : `Drag or add ${particle}`}>
       <span aria-hidden="true">{particle === 'proton' ? 'p⁺' : particle === 'neutron' ? 'n' : 'e⁻'}</span>
     </button>
     <div><strong>{title}</strong><small>{caption}</small></div>
@@ -45,6 +41,9 @@ export default function FreeArea() {
   const [mode, setMode] = useState<BuildMode>('compound');
   const [checked, setChecked] = useState(false);
   const [notice, setNotice] = useState('');
+  const dragPreview = useRef<HTMLDivElement>(null);
+  const dragTarget = useRef<HTMLElement | null>(null);
+  const suppressClick = useRef(false);
   const element = getElement(protons);
   const electrons = shells.reduce((total, count) => total + count, 0);
   const expectedShells = neutralShells(protons);
@@ -121,6 +120,70 @@ export default function FreeArea() {
 
   const changeMode = (next: BuildMode) => { setMode(next); setChecked(false); };
 
+  const startPointerDrag = (event: ReactPointerEvent<HTMLButtonElement>, source: DragSource) => {
+    if (event.button !== 0) return;
+    const pointerId = event.pointerId;
+    const startX = event.clientX;
+    const startY = event.clientY;
+    let moved = false;
+    event.currentTarget.setPointerCapture?.(pointerId);
+
+    const matchingTarget = (x: number, y: number): HTMLElement | null => {
+      const element = document.elementFromPoint(x, y);
+      if (source.kind === 'atom') return element?.closest('.free-formula-zone') as HTMLElement | null;
+      return element?.closest(source.particle === 'electron' ? '.free-orbit' : '.free-nucleus') as HTMLElement | null;
+    };
+    const clearVisual = () => {
+      if (dragPreview.current) dragPreview.current.style.display = 'none';
+      dragTarget.current?.classList.remove('is-pointer-target');
+      dragTarget.current = null;
+    };
+    const removeListeners = () => {
+      window.removeEventListener('pointermove', move);
+      window.removeEventListener('pointerup', finish);
+      window.removeEventListener('pointercancel', cancel);
+    };
+    const move = (pointer: PointerEvent) => {
+      if (pointer.pointerId !== pointerId) return;
+      if (!moved && Math.hypot(pointer.clientX - startX, pointer.clientY - startY) < 8) return;
+      moved = true;
+      if (dragPreview.current) {
+        dragPreview.current.style.display = 'grid';
+        dragPreview.current.style.left = `${pointer.clientX}px`;
+        dragPreview.current.style.top = `${pointer.clientY}px`;
+        dragPreview.current.textContent = source.kind === 'atom' ? source.symbol : source.particle === 'proton' ? 'p⁺' : source.particle === 'neutron' ? 'n' : 'e⁻';
+        dragPreview.current.dataset.kind = source.kind === 'atom' ? 'atom' : source.particle;
+      }
+      const nextTarget = matchingTarget(pointer.clientX, pointer.clientY);
+      if (nextTarget !== dragTarget.current) {
+        dragTarget.current?.classList.remove('is-pointer-target');
+        nextTarget?.classList.add('is-pointer-target');
+        dragTarget.current = nextTarget;
+      }
+    };
+    const finish = (pointer: PointerEvent) => {
+      if (pointer.pointerId !== pointerId) return;
+      const target = moved ? matchingTarget(pointer.clientX, pointer.clientY) : null;
+      removeListeners();
+      clearVisual();
+      if (!moved) return;
+      suppressClick.current = true;
+      window.setTimeout(() => { suppressClick.current = false; }, 0);
+      if (!target) return;
+      if (source.kind === 'atom') addToTray(source.symbol);
+      else if (source.particle === 'electron') addElectron(Number(target.dataset.shellIndex));
+      else addNucleon(source.particle);
+    };
+    const cancel = (pointer: PointerEvent) => {
+      if (pointer.pointerId !== pointerId) return;
+      removeListeners();
+      clearVisual();
+    };
+    window.addEventListener('pointermove', move);
+    window.addEventListener('pointerup', finish);
+    window.addEventListener('pointercancel', cancel);
+  };
+
   return <main className="free-area-page container">
     <div className="free-area-top"><Link className="page-back" to="/study/atoms"><ArrowLeft size={15} /> Atom Explorer</Link><span className="free-area-top-tag">INTERACTIVE WORKBENCH / 01</span></div>
     <div className="free-area-hero">
@@ -134,9 +197,9 @@ export default function FreeArea() {
         <h2 id="particles-heading">Pick a particle</h2>
         <p>Drag <strong>p⁺</strong> and <strong>n</strong> into the nucleus. Drag <strong>e⁻</strong> onto a shell ring. On touch screens, use the + buttons.</p>
         <div className="free-particles">
-          <ParticleCard particle="proton" title="Proton" caption="Positive · sets the element" onAdd={() => addNucleon('proton')} />
-          <ParticleCard particle="neutron" title="Neutron" caption="Neutral · changes the isotope" onAdd={() => addNucleon('neutron')} />
-          <ParticleCard particle="electron" title="Electron" caption="Negative · choose a shell below" onAdd={() => setNotice('Choose a shell with its + button, or drag this electron onto a ring.')} />
+          <ParticleCard particle="proton" title="Proton" caption="Positive · sets the element" onAdd={() => addNucleon('proton')} onPointerStart={startPointerDrag} shouldIgnoreClick={() => suppressClick.current} />
+          <ParticleCard particle="neutron" title="Neutron" caption="Neutral · changes the isotope" onAdd={() => addNucleon('neutron')} onPointerStart={startPointerDrag} shouldIgnoreClick={() => suppressClick.current} />
+          <ParticleCard particle="electron" title="Electron" caption="Negative · choose a shell below" onAdd={() => setNotice('Choose a shell with its + button, or drag this electron onto a ring.')} onPointerStart={startPointerDrag} shouldIgnoreClick={() => suppressClick.current} />
         </div>
         <div className="free-preset-box">
           <span className="free-preset-title"><Sparkles size={15} /> Quick starting atoms</span>
@@ -150,13 +213,13 @@ export default function FreeArea() {
         <div className="free-atom-visual">
           <div className="free-atom-grid" aria-hidden="true" />
           <div className="free-orbit-space">
-            {[3, 2, 1, 0].map((index) => <div key={index} className={`free-orbit free-orbit-${index}`} role="group" aria-label={`${shellLabels[index]} shell drop zone`} onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); event.stopPropagation(); if (particleFromDrop(event) === 'electron') addElectron(index); }} style={{ zIndex: 4 - index }}>
+            {[3, 2, 1, 0].map((index) => <div key={index} className={`free-orbit free-orbit-${index}`} role="group" aria-label={`${shellLabels[index]} shell drop zone`} data-shell-index={index} style={{ zIndex: 4 - index }}>
               {Array.from({ length: shells[index] ?? 0 }, (_, electronIndex) => {
                 const angle = (electronIndex / (shells[index] ?? 1)) * Math.PI * 2 - Math.PI / 2;
                 return <span key={electronIndex} className="free-electron-dot" style={{ left: `${50 + Math.cos(angle) * 50}%`, top: `${50 + Math.sin(angle) * 50}%` } as CSSProperties} aria-hidden="true" />;
               })}
             </div>)}
-            <div className="free-nucleus" role="group" aria-label="Nucleus drop zone" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); event.stopPropagation(); const particle = particleFromDrop(event); if (particle === 'proton' || particle === 'neutron') addNucleon(particle); }}>
+            <div className="free-nucleus" role="group" aria-label="Nucleus drop zone">
               {protons + neutrons === 0 ? <span className="free-nucleus-empty">DROP<br />HERE</span> : <div className="free-nucleons" aria-hidden="true">{Array.from({ length: Math.min(protons, 14) }, (_, index) => <span key={`p${index}`} className="free-nucleon free-nucleon-proton" />)}{Array.from({ length: Math.min(neutrons, 14) }, (_, index) => <span key={`n${index}`} className="free-nucleon free-nucleon-neutron" />)}</div>}
             </div>
           </div>
@@ -184,12 +247,13 @@ export default function FreeArea() {
     <section className="free-area-bench surface" aria-labelledby="bench-heading">
       <div className="free-bench-intro"><div><div className="free-section-number">04 / ASSEMBLY BENCH</div><h2 id="bench-heading">Bring atoms together.</h2><p>Save an atom above, then drag it into the tray—or tap its add button. The checker uses the verified examples in these lessons.</p></div><div className="free-bench-mode" role="group" aria-label="Build mode"><button type="button" onClick={() => changeMode('compound')} aria-pressed={mode === 'compound'}>Compound / molecule</button><button type="button" onClick={() => changeMode('reactant')} aria-pressed={mode === 'reactant'}>Reaction reactant</button></div></div>
       <div className="free-bench-grid">
-        <div className="free-atom-shelf"><h3>YOUR ATOM SHELF <span>{savedAtoms.length}</span></h3>{savedAtoms.length === 0 ? <p className="free-empty-shelf">No saved atoms yet. Build a neutral atom and save it to begin.</p> : <div className="free-saved-list">{savedAtoms.map((atom) => <div className="free-saved-atom" key={`${atom.symbol}-${atom.massNumber}`}><button type="button" draggable onDragStart={(event) => event.dataTransfer.setData('text/plain', `atom:${atom.symbol}`)} onClick={() => addToTray(atom.symbol)} aria-label={`Add ${getElement(atom.atomicNumber)?.name} atom to tray`}><strong>{atom.symbol}</strong><span>{getElement(atom.atomicNumber)?.name}-{atom.massNumber}</span><span aria-hidden="true">＋</span></button><button className="free-remove-saved" type="button" onClick={() => setSavedAtoms((current) => current.filter((item) => item !== atom))} aria-label={`Remove ${getElement(atom.atomicNumber)?.name}-${atom.massNumber} from shelf`}><Trash2 size={15} /></button></div>)}</div>}</div>
-        <div className="free-formula-zone" role="group" aria-label="Formula tray drop zone" onDragOver={(event) => event.preventDefault()} onDrop={(event) => { event.preventDefault(); const value = event.dataTransfer.getData('text/plain'); if (value.startsWith('atom:')) addToTray(value.slice(5)); }}><div className="free-zone-head"><h3>{mode === 'compound' ? 'COMPOUND / MOLECULE TRAY' : 'REACTANT TRAY'}</h3><button type="button" onClick={() => { setComposition({}); setChecked(false); }} disabled={isEmptyTray}>Clear tray</button></div><p className="free-zone-hint">{mode === 'compound' ? 'Combine saved atoms into a supported bonded substance.' : 'Assemble one species that appears on the reactant side of a lesson reaction.'}</p><div className="free-formula-readout" aria-label="Atoms in tray">{isEmptyTray ? <span className="free-drop-prompt">DROP ATOMS HERE<br /><small>or tap one from your shelf</small></span> : <><span className="free-inventory-label">ATOMS IN TRAY</span><strong>{formulaFromComposition(composition)}</strong></>}</div>{!isEmptyTray ? <div className="free-tray-atoms">{Object.entries(composition).map(([symbol, count]) => <div key={symbol}><span>{symbol} × {count}</span><button type="button" onClick={() => removeFromTray(symbol)} aria-label={`Remove one ${getElement(symbol)?.name} atom from tray`}>−</button></div>)}</div> : null}<button className="button button-primary free-check" type="button" disabled={isEmptyTray} onClick={() => setChecked(true)}>Check combination <ArrowRight size={16} /></button></div>
+        <div className="free-atom-shelf"><h3>YOUR ATOM SHELF <span>{savedAtoms.length}</span></h3>{savedAtoms.length === 0 ? <p className="free-empty-shelf">No saved atoms yet. Build a neutral atom and save it to begin.</p> : <div className="free-saved-list">{savedAtoms.map((atom) => <div className="free-saved-atom" key={`${atom.symbol}-${atom.massNumber}`}><button type="button" onPointerDown={(event) => startPointerDrag(event, { kind: 'atom', symbol: atom.symbol })} onClick={() => { if (!suppressClick.current) addToTray(atom.symbol); }} aria-label={`Add ${getElement(atom.atomicNumber)?.name} atom to tray`}><strong>{atom.symbol}</strong><span>{getElement(atom.atomicNumber)?.name}-{atom.massNumber}</span><span aria-hidden="true">＋</span></button><button className="free-remove-saved" type="button" onClick={() => setSavedAtoms((current) => current.filter((item) => item !== atom))} aria-label={`Remove ${getElement(atom.atomicNumber)?.name}-${atom.massNumber} from shelf`}><Trash2 size={15} /></button></div>)}</div>}</div>
+        <div className="free-formula-zone" role="group" aria-label="Formula tray drop zone"><div className="free-zone-head"><h3>{mode === 'compound' ? 'COMPOUND / MOLECULE TRAY' : 'REACTANT TRAY'}</h3><button type="button" onClick={() => { setComposition({}); setChecked(false); }} disabled={isEmptyTray}>Clear tray</button></div><p className="free-zone-hint">{mode === 'compound' ? 'Combine saved atoms into a supported bonded substance.' : 'Assemble one species that appears on the reactant side of a lesson reaction.'}</p><div className="free-formula-readout" aria-label="Atoms in tray">{isEmptyTray ? <span className="free-drop-prompt">DROP ATOMS HERE<br /><small>or tap one from your shelf</small></span> : <><span className="free-inventory-label">ATOMS IN TRAY</span><strong>{formulaFromComposition(composition)}</strong></>}</div>{!isEmptyTray ? <div className="free-tray-atoms">{Object.entries(composition).map(([symbol, count]) => <div key={symbol}><span>{symbol} × {count}</span><button type="button" onClick={() => removeFromTray(symbol)} aria-label={`Remove one ${getElement(symbol)?.name} atom from tray`}>−</button></div>)}</div> : null}<button className="button button-primary free-check" type="button" disabled={isEmptyTray} onClick={() => setChecked(true)}>Check combination <ArrowRight size={16} /></button></div>
         <div className="free-bench-result" aria-live="polite"><h3>THE RESULT</h3>{!checked ? <div className="free-result-idle"><span>?</span><p>Add atoms to the tray and check what they can make.</p></div> : result?.kind === 'compound' ? <div className="free-result-success"><span className="free-result-check"><Check size={20} /></span><small>VERIFIED {result.compound.type.toUpperCase()} EXAMPLE</small><h4>{result.compound.name}</h4><div className="free-result-formula"><Formula formula={result.compound.formula} /></div><p>{result.compound.explanation}</p><Link to="/study/bonding">Explore bonding <ArrowRight size={14} /></Link></div> : result?.kind === 'reactant' ? <div className="free-result-success"><span className="free-result-check"><Check size={20} /></span><small>VERIFIED REACTANT</small><h4><Formula formula={result.formula} /></h4><p>This species appears on the reactant side of {result.reactions.map((reaction) => reaction.name).join(' and ')}. The reaction lesson shows how its atoms rearrange.</p><Link to={`/study/reactions?reaction=${result.reactions[0]?.id ?? ''}`}>See the reaction <ArrowRight size={14} /></Link></div> : <div className="free-result-unsupported"><span>↗</span><h4>Not in this teaching set yet.</h4><p>These atoms are a valid inventory, but this workbench does not claim a bond or reaction for that combination. Try one of the verified targets below.</p></div>}</div>
       </div>
       <div className="free-targets"><span>VERIFIED {mode === 'compound' ? 'SUBSTANCES' : 'REACTANTS'} TO TRY</span><div>{possibleFormulas.map((formula) => <span key={formula}><Formula formula={formula} /></span>)}</div></div>
     </section>
     <p className="free-area-footer">This is a model for learning. Shells are simplified for the first 20 elements; a completed tray is checked by composition, then identified only when it matches a verified example.</p>
+    <div ref={dragPreview} className="free-drag-preview" aria-hidden="true" />
   </main>;
 }

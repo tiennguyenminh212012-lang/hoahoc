@@ -17,7 +17,15 @@
 .free-particles { display: grid; gap: 9px; margin-top: 23px; }
 .free-particle-card { display: flex; align-items: center; gap: 9px; min-height: 65px; padding: 8px; border: 1px solid var(--border-subtle); border-radius: 12px; background: #ffffff08; }
 .free-particle-drag { display: grid; place-items: center; flex: 0 0 43px; width: 43px; height: 43px; border-radius: 50%; border: 1px solid #fff5; color: var(--bg-black); font: 800 .78rem var(--font-mono); cursor: grab; }
-.free-particle-drag:active, .free-saved-atom button[draggable]:active { cursor: grabbing; }
+.free-particle-drag, .free-saved-atom > button:first-child { touch-action: none; user-select: none; }
+.free-particle-drag:active, .free-saved-atom > button:first-child:active { cursor: grabbing; }
+.free-drag-preview { display: none; place-items: center; position: fixed; z-index: 9999; width: 44px; height: 44px; transform: translate(-50%, -50%); border: 1px solid #fff8; border-radius: 50%; background: var(--electron); box-shadow: 0 0 25px #42d8ff88; color: var(--bg-black); font: 800 .8rem var(--font-mono); pointer-events: none; }
+.free-drag-preview[data-kind="proton"] { background: var(--proton); box-shadow: 0 0 25px #ff6b6388; }
+.free-drag-preview[data-kind="neutron"] { background: var(--neutron); box-shadow: 0 0 25px #c5cdd788; }
+.free-drag-preview[data-kind="atom"] { border-radius: 9px; }
+.free-nucleus.is-pointer-target { border-color: white; box-shadow: 0 0 30px #ff6b63bb, 0 0 80px #ff6b633f; }
+.free-orbit.is-pointer-target { border-color: var(--electron); background: #42d8ff16; }
+.free-formula-zone.is-pointer-target { outline: 2px solid var(--electron); outline-offset: -3px; }
 .free-particle-proton .free-particle-drag { background: var(--proton); box-shadow: 0 0 20px #ff6b6344; }
 .free-particle-neutron .free-particle-drag { background: var(--neutron); }
 .free-particle-electron .free-particle-drag { background: var(--electron); box-shadow: 0 0 20px #42d8ff44; }
@@ -105,8 +113,8 @@
 .free-empty-shelf { padding: 28px 5px; color: var(--text-muted); font-size: .76rem; text-align: center; }
 .free-saved-list { display: grid; gap: 7px; }
 .free-saved-atom { display: flex; gap: 4px; }
-.free-saved-atom button[draggable] { display: flex; align-items: center; gap: 7px; width: 100%; min-width: 0; min-height: 43px; padding: 5px 7px; border: 1px solid #42d8ff47; border-radius: 8px; background: #42d8ff0e; color: white; text-align: left; cursor: grab; }
-.free-saved-atom button[draggable]:hover { background: #42d8ff25; }
+.free-saved-atom > button:first-child { display: flex; align-items: center; gap: 7px; width: 100%; min-width: 0; min-height: 43px; padding: 5px 7px; border: 1px solid #42d8ff47; border-radius: 8px; background: #42d8ff0e; color: white; text-align: left; cursor: grab; }
+.free-saved-atom > button:first-child:hover { background: #42d8ff25; }
 .free-saved-atom button strong { display: grid; place-items: center; flex: 0 0 30px; width: 30px; height: 30px; border-radius: 5px; background: #42d8ff26; color: var(--electron); font: 700 .8rem var(--font-mono); }
 .free-saved-atom button span { font-size: .67rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .free-saved-atom button span:last-child { margin-left: auto; color: var(--electron); font-size: 1rem; }

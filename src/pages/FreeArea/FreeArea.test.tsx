@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
 import FreeArea from './index';
 import { atomIsReady, matchBench, neutralShells, sameComposition, startingAtom, supportedReactantFormulas } from './freeAreaChemistry';
 
@@ -51,15 +51,21 @@ describe('Free Area workbench', () => {
     expect(screen.getByRole('heading', { name: 'Not in this teaching set yet.' })).toBeInTheDocument();
   });
 
-  it('accepts drag and drop for nucleus and shell while keeping button controls', () => {
+  it('accepts pointer drops for nucleus and shell while keeping button controls', () => {
     render(<MemoryRouter><FreeArea /></MemoryRouter>);
-    const dragData = new Map<string, string>();
-    const dataTransfer = { setData: (key: string, value: string) => dragData.set(key, value), getData: (key: string) => dragData.get(key) ?? '' };
-    fireEvent.dragStart(screen.getByRole('button', { name: 'Drag or add proton' }), { dataTransfer });
-    fireEvent.drop(screen.getByRole('group', { name: 'Nucleus drop zone' }), { dataTransfer });
+    const nucleus = screen.getByRole('group', { name: 'Nucleus drop zone' });
+    const shell = screen.getByRole('group', { name: 'K shell drop zone' });
+    const hitTest = vi.fn(() => nucleus as Element);
+    Object.defineProperty(document, 'elementFromPoint', { configurable: true, value: hitTest });
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Drag or add proton' }), { pointerId: 1, button: 0, clientX: 10, clientY: 10 });
+    fireEvent.pointerMove(window, { pointerId: 1, clientX: 100, clientY: 100 });
+    fireEvent.pointerUp(window, { pointerId: 1, clientX: 100, clientY: 100 });
     expect(screen.getByTestId('element-identity')).toHaveTextContent('Hydrogen-1');
-    fireEvent.dragStart(screen.getByRole('button', { name: 'Drag or select electron' }), { dataTransfer });
-    fireEvent.drop(screen.getByRole('group', { name: 'K shell drop zone' }), { dataTransfer });
+    hitTest.mockReturnValue(shell);
+    fireEvent.pointerDown(screen.getByRole('button', { name: 'Drag or select electron' }), { pointerId: 2, button: 0, clientX: 10, clientY: 10 });
+    fireEvent.pointerMove(window, { pointerId: 2, clientX: 100, clientY: 100 });
+    fireEvent.pointerUp(window, { pointerId: 2, clientX: 100, clientY: 100 });
     expect(screen.getByText(/Neutral atom · shell arrangement 1/)).toBeInTheDocument();
+    Reflect.deleteProperty(document, 'elementFromPoint');
   });
 });
