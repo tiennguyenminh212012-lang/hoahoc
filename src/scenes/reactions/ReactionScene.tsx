@@ -125,15 +125,21 @@ export function ReactionScene({ reactionId, reactants, products, progress, onSel
   const { reducedMotion } = useSceneEnvironment();
   const targetProgress = Math.max(0, Math.min(1, progress));
   const [displayProgress, setDisplayProgress] = useState(targetProgress);
+  const animationTime = useRef(0);
   useEffect(() => {
     if (reducedMotion) setDisplayProgress(targetProgress);
   }, [reducedMotion, targetProgress]);
   useFrame((_state, delta) => {
     if (reducedMotion) return;
+    // The scene renders every frame, while React only receives animation updates at 30 Hz.
+    animationTime.current += delta;
+    if (animationTime.current < 1 / 30) return;
+    const elapsed = Math.min(animationTime.current, .08);
+    animationTime.current = 0;
     setDisplayProgress((current) => {
       const difference = targetProgress - current;
       if (Math.abs(difference) < 0.003) return targetProgress;
-      return current + difference * (1 - Math.exp(-Math.min(delta, 0.05) * 5));
+      return current + difference * (1 - Math.exp(-elapsed * 5));
     });
   });
   const t = displayProgress;
