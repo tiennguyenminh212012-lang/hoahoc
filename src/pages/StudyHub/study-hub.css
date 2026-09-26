@@ -1,0 +1,55 @@
+.study-hub { padding-bottom: 70px; }
+.study-intro { display: flex; flex-direction: column; align-items: flex-start; }
+.study-intro .section-heading { margin-bottom: 14px; }
+.study-intro .section-heading em { font-style: normal; color: var(--electron); }
+.study-intro > p:last-child { margin: 0; }
+.study-free-area { display: flex; justify-content: space-between; align-items: center; gap: 24px; min-height: 145px; margin: 0 0 16px; padding: 24px 30px; border: 1px solid #42d8ff63; border-radius: 20px; background: radial-gradient(circle at 92% 10%, #1c516052, transparent 33%), linear-gradient(110deg, #101d2c, #0a141e); transition: border-color .2s, transform .2s; }
+.study-free-area:hover, .study-free-area:focus-visible { border-color: var(--electron); color: white; transform: translateY(-2px); }
+.study-free-area h2 { margin: 7px 0 5px; font: 600 clamp(1.4rem, 2.7vw, 2.3rem)/1.1 var(--font-display); letter-spacing: -.04em; }
+.study-free-area p { margin: 0; color: var(--text-secondary); font-size: .86rem; }
+.study-free-area-action { display: inline-flex; align-items: center; gap: 8px; flex-shrink: 0; padding: 12px 14px; border: 1px solid #ffffff29; border-radius: 999px; font-size: .82rem; font-weight: 700; }
+.topic-grid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 15px; }
+.topic-card { position: relative; display: flex; flex-direction: column; overflow: hidden; grid-column: span 2; min-height: 340px; padding: 22px; border: 1px solid var(--border-subtle); border-radius: 22px; background: linear-gradient(145deg, #142334 0%, #0a131d 68%); transition: transform .3s, border-color .3s, box-shadow .3s; }
+.topic-card:hover, .topic-card:focus-visible { color: white; transform: translateY(-5px); border-color: #42d8ff78; box-shadow: 0 22px 48px #0008; }
+.topic-atom, .topic-periodic { grid-column: span 3; min-height: 400px; }
+.topic-periodic { background: linear-gradient(145deg, #172033 0%, #0a121e 70%); }
+.topic-bonding { background: linear-gradient(145deg, #1f1a32 0%, #0b111d 70%); }
+.topic-ions { background: linear-gradient(145deg, #13293a 0%, #0b141e 70%); }
+.topic-reactions { background: linear-gradient(145deg, #28201b 0%, #0e131c 70%); }
+.topic-card-top, .topic-card-bottom { display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; position: relative; z-index: 2; }
+.topic-card-top { color: #bfd0df; }
+.topic-number, .topic-status { font-family: var(--font-mono); font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; }
+.topic-card-bottom { align-items: flex-end; margin-top: auto; }
+.topic-card-bottom > svg { flex-shrink: 0; align-self: flex-end; margin-bottom: 4px; }
+.topic-card-bottom h2 { margin: 4px 0 7px; font-family: var(--font-display); font-size: clamp(1.7rem, 2.3vw, 2.5rem); letter-spacing: -.05em; line-height: 1; }
+.topic-card-bottom p { max-width: 42ch; color: var(--text-secondary); margin: 0; font-size: .91rem; }
+.topic-status { color: var(--electron); }
+.topic-atom .topic-status { color: #ff9a92; }
+.topic-bonding .topic-status { color: #ae99ff; }
+.topic-reactions .topic-status { color: #ffc07b; }
+.study-footnote { margin: 24px 0; }
+.preview-atom, .preview-periodic, .preview-bonding, .preview-ions, .preview-reaction { position: absolute; z-index: 1; left: 50%; top: 45%; transform: translate(-50%, -50%); }
+.preview-atom { width: 230px; height: 210px; display: grid; place-items: center; }
+.preview-atom .preview-nucleus { width: 27px; height: 27px; border-radius: 50%; background: var(--proton); box-shadow: 0 0 40px #ff6b6377; }
+.preview-atom i { position: absolute; width: 190px; height: 86px; border: 1px solid #6cdffd66; border-radius: 50%; transform: rotate(-32deg); }
+.preview-atom i:nth-of-type(2) { transform: rotate(32deg); border-color: #ab8eff88; }
+.preview-atom i:nth-of-type(3) { transform: rotate(90deg); border-color: #c7e6ff55; }
+.preview-atom b { position: absolute; width: 5px; height: 5px; border-radius: 50%; background: var(--electron); box-shadow: 0 0 12px var(--electron); }
+.preview-atom b:nth-of-type(1) { transform: translate(-75px, 35px); }
+.preview-atom b:nth-of-type(2) { transform: translate(54px, -53px); }
+.preview-atom b:nth-of-type(3) { transform: translate(65px, 40px); }
+.preview-periodic { width: min(74%, 340px); display: grid; grid-template-columns: repeat(8, 1fr); gap: 4px; transform: translate(-50%, -57%) perspective(500px) rotateX(16deg) rotateY(-15deg); }
+.preview-periodic span { display: grid; place-items: center; aspect-ratio: 1; border: 1px solid #75b9dc42; background: #1c3f5366; font-family: var(--font-mono); font-size: .57rem; color: #d4e9f3; }
+.preview-periodic span.lit { background: var(--electron); color: #08131d; box-shadow: 0 0 20px #42d8ff66; }
+.preview-bonding { display: flex; gap: 28px; align-items: center; color: white; font-family: var(--font-mono); font-size: 1.3rem; }
+.preview-bonding span { width: 66px; height: 66px; display: grid; place-items: center; border-radius: 50%; border: 1px solid #b49bff88; background: #7557b333; }
+.preview-bonding i { font-style: normal; font-size: .8rem; color: var(--electron); }
+.preview-ions { display: flex; gap: 12px; font-family: var(--font-mono); font-size: 1.6rem; }
+.preview-ions span { padding: 13px 17px; border-radius: 10px; background: #42d8ff11; border: 1px solid #42d8ff44; }
+.preview-ions span:last-child { transform: translateY(20px); }
+.preview-reaction { display: flex; gap: 12px; align-items: center; white-space: nowrap; font-family: var(--font-mono); font-size: 1.05rem; }
+.preview-reaction span { padding: 10px 11px; border: 1px solid #f3aa4566; background: #f3aa4511; border-radius: 8px; }
+.preview-reaction b { color: var(--warning); }
+@media (max-width: 900px) { .topic-card, .topic-atom, .topic-periodic { grid-column: span 3; min-height: 360px; } .topic-reactions { grid-column: span 6; } }
+@media (max-width: 650px) { .topic-grid { grid-template-columns: 1fr; } .topic-card, .topic-atom, .topic-periodic, .topic-reactions { grid-column: 1; min-height: 330px; } .study-intro { padding-top: 32px; } }
+@media (max-width: 650px) { .study-free-area { align-items: flex-start; flex-direction: column; gap: 17px; padding: 22px; } .study-free-area-action { min-height: 44px; } }

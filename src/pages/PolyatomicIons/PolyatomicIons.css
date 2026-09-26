@@ -1,0 +1,87 @@
+.ion-page { min-height: 100vh; color: #f4f7fb; background: radial-gradient(circle at 77% 4%, rgba(61, 141, 151, .15), transparent 30%), #061019; }
+.ion-page * { box-sizing: border-box; }
+.ion-page-inner { width: min(1480px, calc(100% - 80px)); margin: 0 auto; padding: 32px 0 100px; }
+.ion-breadcrumb { display: flex; align-items: center; gap: 12px; color: #8fa5b4; font-size: 13px; letter-spacing: .04em; }
+.ion-breadcrumb a { color: #e9f3f5; text-decoration: none; }
+.ion-breadcrumb a:hover { text-decoration: underline; }
+.ion-kicker, .ion-detail-eyebrow { display: inline-block; color: #88ced0; font-size: 11px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; }
+.ion-hero { display: flex; justify-content: space-between; align-items: flex-end; gap: 28px; min-height: 310px; padding: 48px 0 42px; border-bottom: 1px solid rgba(255,255,255,.13); }
+.ion-hero h1 { margin: 15px 0 18px; font-size: clamp(3.3rem, 7vw, 7rem); font-weight: 600; line-height: .91; letter-spacing: -.075em; }
+.ion-hero h1 em { color: #a7e8dc; font-style: normal; }
+.ion-hero p { max-width: 620px; margin: 0; color: #b6c5cb; font-size: clamp(15px, 1.25vw, 18px); line-height: 1.6; }
+.ion-hero-mark { position: relative; flex: 0 0 360px; height: 250px; color: #d7fff2; font-family: ui-monospace, monospace; }
+.ion-hero-mark span { position: absolute; display: block; padding: 19px 27px; border: 1px solid rgba(181,255,232,.18); border-radius: 22px; background: rgba(17,43,50,.5); box-shadow: 0 14px 50px rgba(0,0,0,.15); font-size: 36px; transform: rotate(-9deg); }
+.ion-hero-mark span:nth-child(1) { top: 8px; left: 75px; }
+.ion-hero-mark span:nth-child(2) { top: 98px; left: 190px; transform: rotate(8deg); }
+.ion-hero-mark span:nth-child(3) { top: 147px; left: 18px; transform: rotate(4deg); }
+.ion-page sub { font-size: .63em; line-height: 0; vertical-align: sub; }
+.ion-page sup { font-size: .55em; line-height: 0; vertical-align: super; }
+.ion-mode-nav { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 1px; margin: 28px 0 32px; border: 1px solid rgba(255,255,255,.13); border-radius: 16px; overflow: hidden; background: rgba(255,255,255,.12); }
+.ion-mode-nav button { min-height: 82px; padding: 17px 20px; border: 0; color: #dce7eb; background: #0b1922; text-align: left; cursor: pointer; }
+.ion-mode-nav button:hover, .ion-mode-nav button.is-active { background: #183239; }
+.ion-mode-nav button.is-active { box-shadow: inset 0 3px #9fe9d5; }
+.ion-mode-nav button strong { display: block; margin-bottom: 5px; font-size: 16px; }
+.ion-mode-nav button span { display: block; color: #9dafb7; font-size: 12px; }
+.ion-mode-nav button.is-active span { color: #c0d4d8; }
+.ion-learn-layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, 380px); gap: 24px; align-items: start; }
+.ion-grid { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; }
+.ion-card { display: flex; flex-direction: column; min-height: 184px; padding: 20px; border: 1px solid rgba(255,255,255,.12); border-radius: 17px; color: #f3fbfa; background: linear-gradient(145deg, #10232c, #0b1922); text-align: left; cursor: pointer; transition: transform .18s ease, border-color .18s ease, background .18s ease; }
+.ion-card:hover { transform: translateY(-3px); border-color: rgba(157,234,217,.48); }
+.ion-card.is-selected { border-color: #a7e8dc; background: linear-gradient(145deg, #1c3a3c, #10252b); }
+.ion-card-top { display: flex; justify-content: space-between; gap: 8px; color: #98b9bd; font-size: 11px; font-weight: 700; letter-spacing: .07em; text-transform: uppercase; }
+.ion-card strong { margin: auto 0 12px; font-family: ui-monospace, monospace; font-size: clamp(26px, 2.5vw, 38px); font-weight: 500; white-space: nowrap; }
+.ion-card-name { color: #e3eeed; font-size: 14px; }
+.ion-detail { position: sticky; top: 20px; min-height: 450px; padding: 27px; border: 1px solid rgba(167,232,220,.25); border-radius: 20px; background: radial-gradient(circle at 80% 5%, rgba(117,231,207,.17), transparent 40%), #102329; }
+.ion-detail-formula { margin: 37px 0 13px; color: #c4fff0; font-family: ui-monospace, monospace; font-size: clamp(48px, 5vw, 76px); line-height: 1.2; white-space: nowrap; }
+.ion-detail h2 { margin: 0 0 26px; font-size: 32px; letter-spacing: -.04em; }
+.ion-detail dl { margin: 0 0 27px; border-top: 1px solid rgba(255,255,255,.15); }
+.ion-detail dl div { display: flex; justify-content: space-between; gap: 10px; padding: 12px 0; border-bottom: 1px solid rgba(255,255,255,.15); }
+.ion-detail dt { color: #9eb4ba; }
+.ion-detail dd { margin: 0; font-weight: 650; }
+.ion-detail p { color: #c0d1d4; line-height: 1.58; }
+.ion-detail a { display: inline-block; margin-top: 11px; color: #b1f4df; }
+.ion-mode-panel { padding: 32px; border: 1px solid rgba(255,255,255,.12); border-radius: 22px; background: #0d1d26; }
+.ion-panel-heading { display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 32px; }
+.ion-panel-heading h2, .ion-guide h2 { margin: 9px 0 0; font-size: clamp(28px, 3vw, 45px); font-weight: 600; letter-spacing: -.05em; }
+.ion-select-label { display: flex; flex-direction: column; gap: 9px; color: #aec1c7; font-size: 13px; }
+.ion-select-label select { min-height: 45px; min-width: 230px; padding: 8px 13px; border: 1px solid rgba(255,255,255,.22); border-radius: 10px; color: #f4f7fb; background: #152c34; font: inherit; }
+.ion-comparison { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ion-compare-card { display: flex; flex-direction: column; min-height: 310px; padding: 26px; border: 1px solid rgba(255,255,255,.12); border-radius: 16px; background: #102730; }
+.ion-compare-card:nth-child(2) { background: #1a292f; }
+.ion-compare-formula { margin: 32px 0 6px; font-family: ui-monospace, monospace; font-size: clamp(54px, 8vw, 98px); line-height: 1.2; }
+.ion-compare-card h3 { margin: 0 0 17px; font-size: 26px; }
+.oxygen-count { align-self: start; padding: 7px 12px; border-radius: 50px; color: #092324; background: #b6e8d9; font-size: 13px; font-weight: 700; }
+.ion-compare-charge { margin-top: auto; padding-top: 18px; color: #a7bac1; }
+.ion-change { margin: 20px 0 0; color: #c2d4d6; font-size: 16px; line-height: 1.6; }
+.ion-change strong { color: #ecfaf5; }
+.ion-practice-score { color: #b2c8ca; font-size: 13px; }
+.ion-practice-score strong { color: #def9e8; font-size: 21px; }
+.ion-hide-options { display: flex; flex-wrap: wrap; gap: 9px; margin: 0 0 25px; padding: 0; border: 0; }
+.ion-hide-options legend { width: 100%; margin-bottom: 9px; color: #b8cbd0; font-size: 13px; }
+.ion-hide-options label { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 9px 16px; border: 1px solid rgba(255,255,255,.16); border-radius: 50px; background: #132a32; cursor: pointer; }
+.ion-hide-options input { accent-color: #9fe9d5; }
+.ion-recall-card { min-height: 360px; padding: clamp(22px, 5vw, 48px); border: 1px solid rgba(166,232,218,.2); border-radius: 18px; background: radial-gradient(circle at 70% 0%, rgba(126,231,208,.16), transparent 55%), #142b32; }
+.ion-recall-main { display: flex; align-items: center; min-height: 164px; font-family: ui-monospace, monospace; font-size: clamp(50px, 8vw, 105px); white-space: nowrap; }
+.ion-recall-main.is-hidden { color: #8eaab0; font-family: inherit; font-size: 24px; font-style: italic; }
+.ion-recall-fields { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid rgba(255,255,255,.16); padding-top: 19px; }
+.ion-recall-fields div { display: flex; flex-direction: column; gap: 6px; }
+.ion-recall-fields span { color: #9db8bd; font-size: 12px; text-transform: uppercase; letter-spacing: .1em; }
+.ion-recall-fields strong { font-size: 18px; }
+.ion-recall-note { color: #d1dfdd; }
+.ion-practice-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 21px; }
+.ion-practice-actions button { min-height: 46px; padding: 10px 19px; border: 1px solid rgba(255,255,255,.22); border-radius: 9px; color: #f3fbfa; background: #1b343b; font: inherit; cursor: pointer; }
+.ion-practice-actions button:hover { background: #2b4950; }
+.ion-practice-actions button.ion-primary { border-color: #bcefdc; color: #082321; background: #bcefdc; font-weight: 700; }
+.ion-practice-actions button.ion-primary:hover { background: #d6f9e9; }
+.ion-guide-grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 12px; margin-top: 30px; }
+.ion-guide-grid article { min-height: 216px; padding: 24px; border: 1px solid rgba(255,255,255,.12); border-radius: 15px; background: #132832; }
+.ion-guide-grid article > span { color: #90c9c7; font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.ion-guide-grid h3 { margin: 20px 0 10px; font-size: 26px; }
+.ion-guide-grid p, .ion-guide-footnote { margin: 0; color: #c0d1d3; line-height: 1.6; }
+.ion-guide-footnote { margin-top: 22px; padding: 18px 20px; border-left: 3px solid #a7e8dc; background: #173139; }
+.ion-page :is(button, select, a, input):focus-visible { outline: 3px solid #d5f8ee; outline-offset: 3px; }
+@media (max-width: 1100px) { .ion-learn-layout { grid-template-columns: minmax(0,1fr) 320px; } .ion-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .ion-hero-mark { flex-basis: 290px; transform: scale(.8); transform-origin: right bottom; } }
+@media (max-width: 767px) { .ion-page-inner { width: min(100% - 34px, 650px); padding-top: 20px; } .ion-hero { display: block; min-height: auto; padding: 38px 0 30px; } .ion-hero h1 { font-size: clamp(3.35rem, 15vw, 5rem); } .ion-hero-mark { display: none; } .ion-mode-nav { grid-template-columns: repeat(2,minmax(0,1fr)); margin: 18px 0 22px; } .ion-mode-nav button { min-height: 71px; padding: 12px; } .ion-mode-nav button strong { font-size: 14px; } .ion-mode-nav button span { font-size: 11px; } .ion-learn-layout { display: flex; flex-direction: column; } .ion-grid { width: 100%; grid-template-columns: repeat(2,minmax(0,1fr)); } .ion-card { min-height: 155px; padding: 15px; } .ion-card strong { font-size: clamp(23px, 6vw, 34px); } .ion-card-top { font-size: 9px; } .ion-detail { position: static; width: 100%; min-height: 0; } .ion-mode-panel { padding: 20px; } .ion-panel-heading { display: block; } .ion-select-label { margin-top: 24px; } .ion-select-label select { width: 100%; } .ion-comparison { gap: 9px; } .ion-compare-card { min-height: 260px; padding: 14px; } .ion-compare-card .ion-kicker { font-size: 9px; } .ion-compare-formula { font-size: clamp(32px, 9vw, 58px); } .ion-compare-card h3 { font-size: 18px; } .oxygen-count { font-size: 11px; } .ion-guide-grid { grid-template-columns: 1fr; } .ion-recall-card { min-height: 300px; } .ion-recall-main { font-size: clamp(40px, 13vw, 68px); } }
+@media (max-width: 380px) { .ion-card { min-height: 142px; } .ion-card strong { font-size: 23px; } .ion-card-top span:first-child { max-width: 75px; overflow-wrap: anywhere; } .ion-comparison { grid-template-columns: 1fr; } .ion-compare-card { min-height: 235px; } }
+.ion-page.is-reduced-motion .ion-card { transition: none; }
+@media (prefers-reduced-motion: reduce) { .ion-card { transition: none; } }

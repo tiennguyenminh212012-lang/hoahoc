@@ -1,0 +1,43 @@
+.welcome { position: relative; min-height: calc(100svh - 76px); overflow: hidden; background: radial-gradient(circle at 50% 41%, #12314a 0%, #091624 27%, #03070d 62%); }
+.welcome::before { content: ''; position: absolute; inset: 0; pointer-events: none; background-image: radial-gradient(#a8dcff77 .7px, transparent .8px); background-size: 49px 49px; opacity: .13; mask-image: radial-gradient(circle at 50% 35%, black, transparent 65%); }
+.welcome-noise { pointer-events: none; position: absolute; inset: 0; opacity: .3; background: linear-gradient(180deg, transparent 52%, #03070d 100%); }
+.welcome-content { position: relative; display: flex; flex-direction: column; min-height: calc(100svh - 76px); padding-top: 22px; padding-bottom: 20px; }
+.welcome-topline, .welcome-bottomline { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.welcome-chapter { font-family: var(--font-mono); text-transform: uppercase; letter-spacing: .08em; font-size: .7rem; color: var(--text-muted); }
+.welcome-scene-wrap { position: relative; width: min(100%, 920px); height: min(37vh, 365px); min-height: 245px; margin: 6px auto -28px; }
+.welcome-scene { width: 100%; height: 100%; }
+.welcome-scene canvas { filter: drop-shadow(0 0 24px #42d8ff22); }
+.welcome-scene .scene-focus-chip { display: none; }
+.welcome-stage-0 .welcome-scene { opacity: 0; }
+.welcome-stage-1 .welcome-scene { opacity: .5; }
+.welcome-stage-2 .welcome-scene { opacity: .8; }
+.welcome-stage-3 .welcome-scene, .welcome-stage-4 .welcome-scene { opacity: 1; }
+.welcome-scene { transition: opacity .8s ease; }
+.welcome-stage-caption { position: absolute; right: 4%; top: 50%; display: flex; gap: 8px; align-items: center; color: var(--text-secondary); font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .08em; }
+.welcome-stage-line { width: 25px; height: 1px; background: var(--electron); }
+.welcome-title-block { position: relative; z-index: 2; text-align: center; margin: auto 0; }
+.welcome-kicker { margin: 0 0 8px; color: var(--electron); font-family: var(--font-mono); font-size: .67rem; text-transform: uppercase; letter-spacing: .24em; }
+.welcome h1 { font-size: clamp(4.2rem, 10.8vw, 10.5rem); margin: 0; font-weight: 500; letter-spacing: -.09em; text-shadow: 0 12px 40px #0006; }
+.welcome-subtitle { margin: 13px 0 25px; color: var(--text-secondary); font-size: clamp(.95rem, 1.4vw, 1.12rem); }
+.welcome-actions { display: flex; justify-content: center; gap: 12px; }
+.welcome-actions .button { min-width: 155px; }
+.welcome-bottomline { margin-top: 25px; font-family: var(--font-mono); font-size: .65rem; color: var(--text-muted); }
+.welcome-bottomline p { margin: 0; }
+.welcome-bottomline > div { display: flex; gap: 18px; }
+.welcome-text-button { display: inline-flex; align-items: center; gap: 5px; border: 0; padding: 8px 0; background: none; color: var(--text-secondary); font: inherit; white-space: nowrap; }
+.welcome-text-button:hover { color: white; }
+.welcome-fallback { display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; text-align: center; }
+.welcome-fallback span { display: grid; place-items: center; width: 160px; height: 160px; border-radius: 50%; border: 1px solid var(--electron); box-shadow: 0 0 70px #42d8ff33, inset 0 0 35px #42d8ff33; font-family: var(--font-display); font-size: 4rem; }
+.welcome-fallback p { color: var(--text-secondary); }
+@media (max-width: 767px) {
+  .welcome-content { min-height: calc(100svh - 120px); }
+  .welcome-topline { align-items: flex-start; }
+  .welcome-chapter { display: none; }
+  .welcome-scene-wrap { height: min(42vh, 350px); min-height: 240px; margin: 15px auto -20px; }
+  .welcome-stage-caption { right: 0; top: auto; bottom: 40px; }
+  .welcome h1 { font-size: clamp(3.6rem, 16vw, 7rem); }
+  .welcome-subtitle { max-width: 32ch; margin: 12px auto 22px; }
+  .welcome-actions { flex-wrap: wrap; }
+  .welcome-actions .button { flex: 1; min-width: 125px; }
+  .welcome-bottomline { align-items: flex-start; flex-direction: column; gap: 8px; }
+}

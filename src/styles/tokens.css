@@ -1,0 +1,25 @@
+:root {
+  font-family: 'Inter Variable', Inter, system-ui, sans-serif;
+  color-scheme: dark;
+  --font-display: 'Space Grotesk Variable', 'Space Grotesk', sans-serif;
+  --font-body: 'Inter Variable', Inter, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', monospace;
+  --bg-black: #03070d;
+  --bg-graphite: #080d14;
+  --bg-navy: #071321;
+  --surface-1: #0d1622;
+  --surface-2: #111d2b;
+  --text-primary: #f4f7fb;
+  --text-secondary: #a9b9ca;
+  --text-muted: #728397;
+  --proton: #ff6b63;
+  --neutron: #c5cdd7;
+  --electron: #42d8ff;
+  --orbital: #8b6cff;
+  --success: #a7e84b;
+  --warning: #f3aa45;
+  --danger: #ff6868;
+  --border-subtle: rgba(255, 255, 255, .11);
+  --panel-glass: rgba(8, 16, 26, .84);
+  --container: 1460px;
+}
